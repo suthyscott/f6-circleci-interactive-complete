@@ -61,4 +61,43 @@ jobs:
 
 Add and commit your changes, then go back to GitHub and refresh to make sure they're there. If you go back to circleci.com you should see that our build job failed. This is because this is not actually a node application and it was not able to complete the npm commands we put in the config.yml. 
 
+Now we're going to adjust the config.yml to run in a docker container, print a message and sleep for a specified amount of time: 
+```
+version: 2
+jobs: #we now have TWO jobs, so that a workflow can coordinate them!
+  one: #This is our first job
+    docker: #it uses the docker executor
+      - image: circleci/ruby:2.4.1 #specifically, a docker iamge with ruby 2.4.1
+        auth: 
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference
+    # Steps are a list of commands to run inside the docker container above. 
+    steps: 
+      - checkout # this pulls code down from GitHub
+      - run: echo "A first hello" # This prints "A first hello" to stdout.
+      - run: sleep 25 # A command telling the job to "sleep" for 25 seconds. 
+  two: # This is our second job. 
+    docker: # it runs inside a docker image, the same as above. 
+      - image: circleci/ruby:2.4.1
+        auth: 
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD # context / project UI env-var reference. 
+    steps: 
+      - checkout
+      - run: echo "A more familiar hi" # We run a similar echo command to above. 
+      - run: sleep 15 # And then sleep for 15 seconds. 
+# Under the workflows: map, we can coordinate our two jobs, defined above. 
+workflows: 
+  version: 2
+  one_and_two: # This is the name of our workflow
+    jobs: # And here we tell it what jobs to run.
+      - one 
+      - two
+```
+
+
+# GitHub branching
+
+We're going to practice branching and merging on GitHub. Go to this repo for instructions on this part of the interactive lecture: https://github.com/suthyscott/f6-individual-branch-practice
+
 
