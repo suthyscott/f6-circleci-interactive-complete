@@ -26,8 +26,8 @@ workflows:
   version: 2
   one_and_two: # This is the name of our workflow
     jobs: # And here we tell it what jobs to run.
-      one: 
-      two:
+      - one 
+      - two
 
 
 
