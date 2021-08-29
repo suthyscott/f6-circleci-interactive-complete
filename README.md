@@ -42,3 +42,23 @@ Once you have successfully connect the repo and the project in circleci you can 
 ### Config.yml
 
 Now we're going to adjust the config.yml file to run what we want it to. 
+```
+version: 2.1
+orbs:
+  node: circleci/node@1.1
+jobs: 
+  build: 
+    executor: 
+      name: name/default
+      tag: '10.4'
+    steps:
+      - checkout
+      - node/with-cache
+      steps: 
+        - run npm install
+      - run: npm run test
+```
+
+Add and commit your changes, then go back to GitHub and refresh to make sure they're there. If you go back to circleci.com you should see that our build job failed. This is because this is not actually a node application and it was not able to complete the npm commands we put in the config.yml. 
+
+
